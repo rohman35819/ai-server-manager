@@ -1,12 +1,28 @@
-from fastapi import APIRouter, Header, HTTPException
-from app.services.executor import execute_command
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+import os
 
 router = APIRouter()
 
-@router.post("/")
-def run_command(command: str, x_api_key: str = Header(...)):
-    from os import getenv
-    if x_api_key != getenv("API_KEY_OWNER"):
-        raise HTTPException(status_code=403, detail="Forbidden")
-    result = execute_command(command)
-    return {"status": "ok", "command": command, "result": result}
+# Model untuk request command
+class CommandRequest(BaseModel):
+    command: str
+    api_key: str
+
+@router.post("/", summary="Send a command to AI")
+def execute_command(request: CommandRequest):
+    # Cek API_KEY
+    if request.api_key != os.getenv("API_KEY"):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    # Di sini kamu bisa proses perintah apapun sesuai instruksi
+    command = request.command.lower()
+
+    # Contoh respon
+    if "hai" in command:
+        return {"response": "Halo Bani! Perintah diterima."}
+    elif "shutdown" in command:
+        # Contoh: jangan benar-benar shutdown komputer kecuali aman
+        return {"response": "Shutdown command diterima (simulasi)."}
+    else:
+        return {"response": f"Perintah '{command}' diterima dan siap diproses."}
