@@ -1,3 +1,7 @@
+# ai-server-manager
+Script Python untuk mengatur server AI dengan OpenAI API + worker manager
+
+
 🔍 Penjelasan Per Modul
 Folder	Fungsi
 app/	Semua logic utama sistem
