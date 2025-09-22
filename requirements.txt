@@ -4,3 +4,4 @@ psutil
 scikit-learn
 joblib
 python-dotenv
+openai>=1.0.0
