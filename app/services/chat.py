@@ -1,12 +1,14 @@
-import openai
+from openai import OpenAI
 from app.models.chat import ChatRequest, ChatResponse
 
-openai.api_key = "YOUR_OPENAI_API_KEY"
+client = OpenAI()
 
 def get_chat_response(request: ChatRequest) -> ChatResponse:
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=request.message,
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",  # bisa ganti ke "gpt-4" kalau ada akses
+        messages=[
+            {"role": "user", "content": request.message}
+        ],
         max_tokens=150
     )
-    return ChatResponse(reply=response.choices[0].text.strip())
+    return ChatResponse(reply=response.choices[0].message.content.strip())
